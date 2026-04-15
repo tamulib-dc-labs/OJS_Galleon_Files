@@ -1,0 +1,3930 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>COASTALENGINEERING2024</title>
+  <style>
+  /* ── Reset ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  /* ── Design tokens ── */
+  :root {
+    --ink:        #1c2b3a;   /* near-black with a cool undertone            */
+    --ink-light:  #4a5568;   /* secondary text                              */
+    --accent:     #2c5282;   /* ink navy — headings, links, rule accents    */
+    --accent-mid: #4a7fb5;   /* lighter accent for borders                  */
+    --rule:       #d6dde6;   /* subtle dividers                             */
+    --bg-page:    #dde3ea;   /* cool warm-gray page background              */
+    --bg-card:    #ffffff;   /* article card surface                        */
+    --bg-tint:    #f0f4f8;   /* abstract / even-row tint                    */
+    --warm-accent: #b7860b;  /* warm accent for abstract label, top bar     */
+    --font-serif: "Georgia", "Times New Roman", serif;
+    --shadow-card: 0 2px 8px rgba(0,0,0,.08), 0 8px 32px rgba(0,0,0,.06);
+  }
+
+  /* ── Page shell ── */
+  body {
+    font-family: var(--font-serif);
+    font-size: 1.0625rem;    /* ≈ 17px — comfortable for long-form reading  */
+    line-height: 1.8;
+    color: var(--ink);
+    background-color: var(--bg-page);
+    /* Subtle linen-like texture via a repeating gradient */
+    background-image: repeating-linear-gradient(
+      135deg,
+      transparent,
+      transparent 2px,
+      rgba(255,255,255,.03) 2px,
+      rgba(255,255,255,.03) 4px
+    );
+    min-height: 100vh;
+    padding: 3rem 1rem 6rem;
+  }
+
+  /* ── Article card ── */
+  article {
+    max-width: 960px;          /* ~letter-page width at screen resolution    */
+    margin-inline: auto;
+    background: var(--bg-card);
+    border-radius: 3px;
+    box-shadow: var(--shadow-card);
+    /* Thin gold accent bar across the top */
+    border-top: 4px solid var(--warm-accent);
+    padding: 3.5rem 5rem 4rem;
+  }
+
+  /* ── Headings ── */
+  h1, h2, h3, h4 {
+    font-family: var(--font-serif);
+    color: var(--accent);
+    line-height: 1.2;
+    font-weight: normal;       /* Georgia italic/bold weight managed per level */
+  }
+
+  h1.article-title {
+    font-size: 2rem;
+    letter-spacing: -0.01em;
+    margin-bottom: 1.5rem;
+    color: var(--ink);
+    border-bottom: 2px solid var(--warm-accent);
+    padding-bottom: 0.75rem;
+  }
+
+  h2 {
+    font-size: 1.3rem;
+    font-variant: small-caps;
+    letter-spacing: 0.06em;
+    margin-top: 2.5rem;
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.25rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  h3 {
+    font-size: 1.05rem;
+    font-style: italic;
+    margin-top: 1.75rem;
+    margin-bottom: 0.35rem;
+    color: var(--ink-light);
+  }
+
+  h4 {
+    font-size: 1rem;
+    font-style: italic;
+    margin-top: 1.25rem;
+    margin-bottom: 0.25rem;
+    color: var(--ink-light);
+  }
+
+  /* ── Body text ── */
+  p {
+    margin-top: 1rem;
+    hyphens: auto;
+    -webkit-hyphens: auto;
+  }
+  /* Indent continuation paragraphs — classic book convention */
+  p + p {
+    text-indent: 1.75em;
+    margin-top: 0;
+  }
+  /* But never indent the first paragraph after a heading */
+  h1 + p, h2 + p, h3 + p, h4 + p { text-indent: 0; }
+
+  /* ── Abstract ── */
+  div.abstract {
+    background: var(--bg-tint);
+    border: 1px solid var(--rule);
+    border-left: 4px solid var(--warm-accent);
+    border-radius: 0 3px 3px 0;
+    padding: 1.25rem 1.5rem;
+    margin: 2rem 0;
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+  div.abstract p { text-indent: 0; margin-top: 0.5rem; }
+  div.abstract p:first-child { margin-top: 0; }
+  div.abstract::before {
+    content: "Abstract";
+    display: block;
+    font-variant: small-caps;
+    letter-spacing: 0.1em;
+    font-size: 0.78rem;
+    color: var(--warm-accent);
+    margin-bottom: 0.6rem;
+  }
+
+  /* ── Tables ── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 2rem 0;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    overflow: hidden;   /* clip thead corner radius */
+  }
+  th, td {
+    padding: 0.6rem 1rem;
+    text-align: left;
+    vertical-align: top;
+  }
+  thead th {
+    background: var(--accent);
+    color: #fff;
+    font-family: var(--font-serif);
+    font-variant: small-caps;
+    font-size: 0.82rem;
+    letter-spacing: 0.08em;
+    font-weight: normal;
+    border-bottom: 2px solid var(--accent-mid);
+  }
+  tbody tr { border-bottom: 1px solid var(--rule); }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:nth-child(even) td { background: var(--bg-tint); }
+  tbody tr:hover td { background: #e6edf5; transition: background 0.15s; }
+
+  /* ── Figures & images ── */
+  figure {
+    margin: 2.5rem 0;
+    text-align: center;
+  }
+  figure img {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    box-shadow: 0 2px 12px rgba(0,0,0,.10);
+  }
+  figcaption {
+    margin-top: 0.6rem;
+    font-size: 0.85rem;
+    color: var(--ink-light);
+    font-style: italic;
+    line-height: 1.5;
+  }
+
+  /* ── Inline ── */
+  strong { font-weight: bold; color: var(--ink); }
+  em     { font-style: italic; }
+  a      { color: var(--accent); text-underline-offset: 3px; }
+  a:hover { color: var(--warm-accent); }
+
+  /* ── Responsive — collapse padding on small screens ── */
+  @media (max-width: 1020px) {
+    article { padding: 2.5rem 3rem 3rem; }
+  }
+  @media (max-width: 640px) {
+    article { padding: 1.5rem 1.25rem 2rem; }
+    h1.article-title { font-size: 1.5rem; }
+  }
+
+  /* ── Print ── */
+  @media print {
+    body { background: #fff; padding: 0; }
+    article {
+      box-shadow: none;
+      border-top: none;
+      padding: 0;
+      max-width: 100%;
+    }
+    a { color: var(--ink); text-decoration: none; }
+    tbody tr:hover td { background: none; }
+  }
+
+  </style>
+</head>
+<body>
+<main>
+<article>
+<p>AFIELDEXPERIMENTONGRAVITYWAVES:EFFECTSOFTHEWAVESTEEPNESSAND EFFECTIVEWATERDEPTHONTHEWAVEPROFILEANDBREAKINGLIMIT</p>
+<p>1 1 2 2 2 2 GeorgeSpiliotopoulos ,VanessaKatsardi ,VincenzoFiamma ,CarloRuzzo ,AlessandraRomolo ,FeliceArena</p>
+<p>This paper describes a series of field observations of large surface gravity waves, recorded at the Natural Ocean EngineeringLaboratory(NOEL),Italy.Thestudyinvolvesavarietyofseastatesmeasuredataseriesofwaterdepths, ff fromdeeptotheshallowestlimitofintermediatewaters. Thediscussionisfocusedonthee ectofthespectraland ff localwaveparameters,describedbythewavesteepnessandthee ectivewaterdepth,onthewaveprofile,statistical propertiesandthebreakingcharacteristics. Thedatapresentedshowatransitioninthedispersivepropertiesofthe wavefieldaswavespropagatefromdeeptoshallowerwater. Thisisindicatedbothinthewaveprofilesaswellasthe waveheightdistributions.Leadingroles,albeitcompetitivetoeachother,playthewavesteepnessandwavebreaking.</p>
+<p>Keywords:FieldExperiment;RandomWaves;ProbabilityofExceedence;Finitewaterdepths;BreakingLimit</p>
+<p>INTRODUCTION Thispaperdescribesfieldobservationsoflimitingsurfacegravitywaves,recordedattheNaturalOcean EngineeringLaboratory(NOEL)oftheMediterraneaUniversityofReggioCalabria,Italy. Theexperiment focuses on the evolution of a sea state as it propagates from deep to the shallowest limit of intermediate waters. The purpose of this experiment is to measure a large number of sea states evolving in a range of water depths. Due to the non-controlled nature of field experiments, the data was collected over a 2 month period between May and July 2023, a period ideal based on the local wind climate, in order to haveadatabaseconsistingofthebestpossiblevarietyofseastates. Thegoalofthesemeasurementsisto ff highlightthee ectsofthepeakperiod,thewavesteepnessandthewaterdepthonthewaveprofileandthe breakinglimit. Previouslaboratorystudies(e.g.Katsardietal.,2013)haveshownthatthecharacteristics ff andformationoflimitingwavesarecriticallydependentonthee ectivewaterdepththatreflectsthepeak periodandthelocalwaterdepth. Thesethoughwerelimitedbythelaboratoryenvironmentwhilethefield conditionsatNOELcaneliminatetheseweaknesses.</p>
+<p>BACKGROUND TheNOELhasbeenasiteforamultitudeoffieldexperiments,startingfromBoccottietal.(1993a,b); Boccotti(1997)andincludingBoccottietal.(2011);RomoloandArena(2013);Voermansetal.(2020). In theseexperiments,proofwasderivedforthequasi-determinismtheoryofBoccotti(1983),whilethetheory forthewaveenergyconverterdevice,theso-calledREWEC,wasvalidatedthereasascalemodel(Boccotti, 2007;Boccottietal.,2007,2012).Theengineeringsignificanceofthefindingsfromtheexperimentalwork inNOELispresentedinBoccotti(2014). Regarding previous work relative to our research and concerning shallower water depths, Whittaker et al. (2016) analysed field data of surface water waves propagating on relatively shallow waters; the ef- fective water depth ranging between 0 . 32 &lt; k d &lt; 0 . 48. They have shown that the quasi-determinism p or NewWave (Lindgren,1970;Boccotti,1983;Tromansetal.,1991)descriptionoflargewavesmayhave somerelevanceeveninthisshallowwaterrange. Nevertheless,thecomparisonsweremadewiththeaver- agelinearisedprofileofthelargestnon-breakingmeasuredwaves. Intheshallowestregions,thedispersive propertiesarelimited,andthewavesexhibitsolitary-typebehavior. Evidenceforthelatterisprovidedby fielddatapresentedinTayfunandAlkhalidi(2020)involvingsevereseastateswithlargewaves,including ff breaking waves, propagating at e ective water depths between 0 . 19 &lt; k d &lt; 0 . 42. Strong relevant evi- p dence of the large waves’ behaviour in the shallow end of intermediate waters is also shown in Katsardi etal.(2013). ff Itiswellknownthatthee ectsontheformationoflargewavesarereflectedinthestatisticalproper- tiesofthewavefield,suchasthewavecrestandheightdistributions(GibsonandSwan,2007;Latheefand Swan,2013)andtheprobabilitydensityfunctions(FedeleandArena,2010).Whilenonlinearityisverysig- ff nificant,wavebreakingmoderatesitse ectsleadingtoarestrictionofwaveheight,modifyingthestatistical propertiesofthewavefield(LatheefandSwan,2013;KarmpadakisandSwan,2020). Moreover,anumber</p>
+<p>1 DepartmentofCivilEngineering,UniversityofThessaly,Greece 2 NaturalOceanEngineeringLaboratory(NOEL),MediterraneaUniversityofReggioCalabria,Italy</p>
+<p>2 COASTALENGINEERING2024</p>
+<p>ff ofstudiesindicatethattherelativeimportanceofwavebreakingincreasesasthee ectivewaterdepthre- ff duces. Examplesincludefielddatatakenfromfouro shorelocations(Wuetal.,2016)andlaboratorydata (KatsardiandSwan,2011);allmeasuredinfinitewaterdepth. Later,Karmpadakisetal.(2019)presented a series of wave basin laboratory measurements in intermediate water depths (0 . 90 &lt; k d &lt; 1 . 80), while p Schubertetal.(2020)presentedrecentlyverylongdirectionallaboratorysimulationsofbothbreakingand non-breaking waves in a larger water depth range (0 . 70 &lt; k d &lt; 2 . 26). Statistical properties of waves p recorded in NOEL are also presented in Voermans et al. (2020), concerning waves incident to a vertical wall. Waveheightdistributionsandbreakinglimits Theestablishedwaveheightdistributionsthatwillbeusedinthispaperare: 1. Rayleigh’slineardistribution(Eq.1)(Longuet-Higgins,1953),</p>
+<p>H = 2 P − exp[ 2( ) ] (1) cdf H s</p>
+<p>2. Forristall(1978)lineardistribution(Eq.2)fittedtodeepwaterdata, H = 2 . 126 − P exp[ 2 . 263( ) ] (2) cdf H s</p>
+<p>ff 3. Boccotti(1989)distribution(Eq.3)thatincorporatesfinitespectralbandwidthe ects, + ∗ r T H 1 ¨ ( ) 1 = 2 P √ exp[ − ( ) ] (3) cdf − ∗ ∗ ∗ 4(1 r ( T )) σ 2¨ r ( T )(1 − r ( T )) η ∗ with T beingtheabscissaofthefirstminimumoftheautocorrelationfunction( r ( t ))ofthesurface = 2 elevationandthedoubleoverdotdenotesthesecondtimederivative: r ¨ ( t ) ∂ r /∂ t .</p>
+<p>4. Klopman(1996)modifiedGlukhovskiidistribution(Eq.4)derivedfromfieldexperiments: H = κ − P exp[ A ( ) ] (4) cdf H rms ∗ = H istherootmeansquarewaveheightand κ isassumedtobeafunctionoftheratio H H / d rms rms suchthat: 2 = κ (5) ∗ 1 − β H andAisdefinedby: 2 k = Γ + A [ ( 1] (6) 2 κ Γ = denotesthegammafunctionand β 0 . 7basedonafitfromlaboratorydata(Klopman,1996).</p>
+<p>5. BattjesandGroenendijk(2000)compositeweibulldistribution(CWD)(Eq.7):  = H  − k ≤ P ( H ) exp[ ( ) ] H H  1  1 tr = H P (7) 1  cdf =  H k P H − H ≥ H  ( ) exp[ ( ) ] 2 2 tr H 2 = = where k 2, k 3 . 6,and H definesthetransitionwaveheightatwhichtheWeibulldistributions tr 1 2 arematched. Bydefiningthetransitionwaveheightas: = + H ( β β m ) d (8) tr tr 1 tr 2 = = where β 0 . 35and β 5 . 8. Thesolutionincludesthelocalwaterdepth( d )andalsothebottom tr 1 tr 2 slope( m ). Thenormalisingwaveheights, H and H ,areexpressedintermsofthenormalisedtran- 1 2 = sitionwaveheight, H H / H andgivenbyanequationortablesfromBattjesandGroenendijk tr tr rms (2000).</p>
+<p>COASTALENGINEERING2024 3</p>
+<p>6. Mendezetal.(2004)distribution(Eq.9)thatalsoincludestheparameterofthebedslope:</p>
+<p>ξ = ∗ ∗ 2 2 P − ϕ κ ≤ ξ ≤ /κ exp[ ( )( ) ]for0 1 (9) cdf ∗ 1 − κ ξ</p>
+<p>= ∗ ∗ ∗ ≃ − 0 . 944 1 . 187 with ξ H / H , ϕ ( κ ) [1 ( κ ) ] and κ asasingleshapeparameterdependentonthelocal rms wavepropertiesandthepropagationhistoryandestimatedwiththefollowingempiricalequation:</p>
+<p>H rms ∗ = 2 . 5 + 2 − κ ( ) (4 . 7 20 . 8 Ir 26 . 2 Ir ) (10) d (cid:112) = 2 where Ir isthelocalIribarrennumber, Ir H / ( gT / 2 π ), m thebedslopeand T themeanwave rms m m period.</p>
+<p>Thewavebreakinglimitsthatareusedforcomparisonsinthispaperare:</p>
+<p>= H / d . 1. McCowan(1894)solitarywavebreakingcriterion( 0 78),</p>
+<p>2. Miche(1944)criterion(Eq.11),appropriateforregularwavesandvalidforallwaterdepths,</p>
+<p>H k b = 0 . 142 π tanh( kd ) (11) 2</p>
+<p>3. Goda(2010)updatedcriterion(Eq.12)forincipientwavebreaking,</p>
+<p>H A b k o d + 4 / 3 = − 1 . 5 (1 11 m ) − 2 π [1 . 0 e ] (12) 2 d k d o</p>
+<p>= k m A . indicatingthedeepwaterwavenumber, thebedslopeand 0 173. o</p>
+<p>EXPERIMENTALSETUP AtNOEL,thegoverningwindfield(bothfetchandvelocities), aswellasthelocalbathymetrychar- acteristics,allowstheconductionoffieldexperimentswithalengthscalebetween1:30-1:50comparedto open sea experiments, hence a time scale of 1:5-1:7. The local bed slope is ≈ 1:10. The measurements were carried out using a set of 7 ultrasonic probes over the mean water level and 5 pressure transducers underwater,allsupportedon4separatesteelcolumns(Fig.1). Inthisstudy,onlythesurfaceelevationdata fromtheultrasonicprobeswasused.</p>
+<p>KeyParameters Themeasureddataallowsthequantificationandvariationofthemaximumcrestelevation, themaxi- mumwaveheightandtheoccurrenceofwavebreakingwithrespecttokeyparameterssuchasthesignificant waveheight H ,thespectralpeakperiod T ,andthelocaldepth d . Inphysicaltermsthesignificantwave s p heightandthespectralpeakperioddeterminetheseastatesteepness( k H / 2),where k isthewavenumber p s p ff corresponding to the spectral peak. The e ective water depth ( k d ) is related to the water depth and the p ff spectralpeakperiod. Bothparameters,theseastatesteepnessandthee ectivewaterdepth,determinethe nonlinearityofthewavefieldandtheextentoftheoccurrenceofanywavebreaking.</p>
+<p>Processingfielddata The time window chosen as representative of a storm in full scale conditions is 1h corresponding to approximately5-7hforscalefactorsof1:30-50,whiletheunderlyingspectrawereextractedbyusingFFTs. Thewaveswereanalysedwithazeroup-crossingmethodtoextractindividualwaveproperties.Asshownin Fig.1,therearetwowaverecordsmeasuredateachwaterdepth.Therecordschosenherearetheleastnoisy comparedtotheonesinthesamedepthtoensurereliableresults. Inthiscase, thesensorschosenarethe oneslabeledU1,U3andU6. Themeasuredsurfaceelevationdataisstoredinindividual5minrecords. By extractingthe H ofeachsuchrecord(Fig.2),wewereabletoassesstimeperiodsofsignificantwavefield s steepnessonseveraloccasionsthroughoutthelengthoftheexperiment, andthenfocusonthose. Herein, wewillexaminethree1hrecordsofsignificantwaveactivityandassesstheirproperties. Therecordsare named rec140723 , rec260723 and rec270723 , correspondingtothedatestheywerecollectedandinvolve ≈ 1700individualwaves. Themainanalysiswillbedoneonthesteepestrecord rec260723 withadditional commentaryontheothertwo.</p>
+<figure>
+  <img src="data:image/png;base64,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AACAfMnvAAAAACBf8jsAAAAAyJf8DgAAAADyJb8DAAAAgHzJ7wAAAAAgX/I7AAAAAMiX/A4AAAAA8iW/AwAAAIB8ye8AAAAAIF/yOwAAAADIl/wOAAAAAPIlvwMAAACAfMnvAAAAACBf8jsAAAAAyJf8DgAAAADyJb8DAAAAgHzJ7wAAAAAgX/I7AAAAAMiX/A4AAAAA8iW/AwAAAIB8ye8AAAAAIF/yOwAAAADIl/wOAAAAAPIlvwMAAACAfMnvAAAAACBf8jsAAAAAyJf8DgAAAADyJb8DAAAAgHzJ7wAAAAAgX/I7AAAAAMiX/A4AAAAA8iW/AwAAAIB8ye8AAAAAIF/yOwAAAADIl/wOAAAAAPIlvwMAAACAfMnvAAAAACBf8jsAAAAAyJf8DgAAAADyJb8DAAAAgHzJ7wAAAAAgX/I7AAAAAMiX/A4AAAAA8iW/AwAAAIB8ye8AAAAAIF/yOwAAAADIl/wOAAAAAPIlvwMAAACAfMnvAAAAACBf8jsAAAAAyJf8DgAAAADyJb8DAAAAgHzJ7wAAAAAgX/I7AAAAAMiX/A4AAAAA8iW/AwAAAIB8ye8AAAAAIF/yOwAAAADIl/wOAAAAAPIlvwMAAACAfMnvAAAAACBf8jsAAAAAyJf8DgAAAADyJb8DAAAAgHzJ7wAAAAAgX/I7AAAAAMiX/A4AAAAA8iW/AwAAAIB8ye8AAAAAIF/yOwAAAADIl/wOAAAAAPIlvwMAAACAfMnvAAAAACBf8jsAAAAAyJf8DgAAAADyJb8DAAAAgHzJ7wAAAAAgX/I7AAAAAMiX/A4AAAAA8iW/AwAAAIB8ye8AAAAAIF/yOwAAAADIl/wOAAAAAPIlvwMAAACAfMnvAAAAACBf8jsAAAAAyJf8DgAAAADyJb8DAAAAgHzJ7wAAAAAgX/I7AAAAAMiX/A4AAAAA8iW/AwAAAIB8ye8AAAAAIF/yOwAAAADIl/wOAAAAAPIlvwMAAACAfMnvAAAAACBf8jsAAAAAyJf8DgAAAADyJb8DAAAAgHzJ7wAAAAAgX/I7AAAAAMiX/A4AAAAA8iW/AwAAAIB8ye8AAAAAIF/yOwAAAADIl/wOAAAAAPIlvwMAAACAfMnvAAAAACBf8jsAAAAAyJf8DgAAAADyJb8DAAAAgHzJ7wAAAAAgX/I7AAAAAMiX/G49s9lsMBicnJzs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" alt="Diagram showing the layout of ultrasonic and pressure sensors for water depth measurement. The setup includes seven ultrasonic sensors (U1-U7) and five pressure sensors (T3-T7) positioned along three transect lines parallel to the shoreline. The top transect spans from U1 to U2, the middle transect extends 280 cm from U3 to U4 with an additional sensor U5 positioned below, and the bottom transect spans 120 cm (60 cm + 60 cm) from U6 to U7. All sensors are connected by lines representing measurement transects, with the shoreline indicated at the base.">
+</figure>
+<table>
+  <thead><tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <th scope="col">U1
+U3
+U6</th>
+    <th scope="col">U1
+U3
+U6</th>
+  </tr></thead>
+  <tbody>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  </tbody>
+</table>
+<table>
+  <tbody>
+  <tr>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+  </tr>
+  </tbody>
+</table>
+<p>Jul 12 Jul 15</p>
+<h2>COASTALENGINEERING2024</h2>
+<h2>Figure1:Thearrangementofsensors</h2>
+<p>Jul 18 Jul 21 Jul 24 Jul 27 Jul 30 2023</p>
+<p>Figure2: H pereachindividual5minrecordinJuly2023. Thethreerecordschosenareindicatedwith</p>
+<h2>s</h2>
+<h2>blackrectangles</h2>
+<table>
+  <tbody>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  </tbody>
+</table>
+<table>
+  <tbody>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  </tbody>
+</table>
+<table>
+  <tbody>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  </tbody>
+</table>
+<table>
+  <thead><tr>
+    <td></td>
+    <th scope="col">rec140723</th>
+    <td></td>
+    <td></td>
+    <th scope="col">rec260723</th>
+    <td></td>
+    <td></td>
+    <th scope="col">rec270723</th>
+    <td></td>
+    <td></td>
+  </tr></thead>
+  <tbody>
+  <tr>
+    <td>Parameters</td>
+    <td>U1</td>
+    <td>U3</td>
+    <td>U6</td>
+    <td>U1</td>
+    <td>U3</td>
+    <td>U6</td>
+    <td>U1</td>
+    <td>U3</td>
+    <td>U6</td>
+  </tr>
+  <tr>
+    <td>Depth(inm)
+T (ins)
+p
+k d
+p
+H (inm)
+s
+H (inm)
+rms
+H k /2
+s p
+H (inm)
+max</td>
+    <td>3.78
+2.63
+2.26
+0.344
+0.223
+0.103
+0.559</td>
+    <td>1.75
+2.84
+1.09
+0.322
+0.214
+0.100
+0.584</td>
+    <td>0.44
+2.84
+0.49
+0.255
+0.176
+0.140
+0.401</td>
+    <td>3.86
+2.33
+2.89
+0.387
+0.251
+0.145
+0.593</td>
+    <td>1.82
+2.33
+1.50
+0.359
+0.234
+0.148
+0.589</td>
+    <td>0.54
+2.33
+0.68
+0.275
+0.184
+0.173
+0.400</td>
+    <td>3.83
+2.84
+1.98
+0.440
+0.288
+0.114
+0.694</td>
+    <td>1.79
+2.84
+1.11
+0.410
+0.270
+0.127
+0.701</td>
+    <td>0.50
+3.01
+0.49
+0.297
+0.200
+0.144
+0.419</td>
+  </tr>
+  </tbody>
+</table>
+<p>COASTALENGINEERING2024 5</p>
+<p>(a)</p>
+<p>0 0.2 0.4 0.6 0.8 1 1.2 f(Hz) (b)</p>
+<p>0 0.2 0.4 0.6 0.8 1 1.2 f(Hz) (c)</p>
+<p>0 0.2 0.4 0.6 0.8 1 1.2 f(Hz)</p>
+<p>= Figure3: Energydensityspectraofrec260723(normalisedwithmaximumofthedeepestsensor),a) d = = = = = 3 . 86 m- k d 2 . 89 ,b) d 1 . 82 m- k d 1 . 50 ,c) d 0 . 54 m- k d 0 . 68 p p p</p>
+<p>DISCUSSIONOFRESULTS Table1providesthewavefieldparametersforthethreecasesindicatedinFig.2whichwillbeanalysed inthisSection.</p>
+<p>Table1:Wavefieldparametersforthethreecases</p>
+<p>FrequencySpectrum Theextractedpowerdensityspectraforcase rec260723 areshowninFig.3. Thespectrumisbroadin = = deeperwaters( k d 2 . 89)andbecomesnarrowerinintermediatewaterdepth( k d 1 . 50). Inshallower p p = water( k d 0 . 68)thewaveenergyhasdissipatedduetowavebreaking. Notethat k correspondstothe p p locallymeasuredspectrum.</p>
+<p>WaveProfile InFig.4thewaveprofileclosetothelargestmeasuredwaveheight, H ,ofeachrecordisdisplayed. max = ff Thewavefieldisrelativelysteep(deepwatersteepness H k / 2 0 . 145)propagatingfrome ectivelydeep so p ff to shallow waters (2 . 89 ≥ k d ≥ 0 . 68). By analyzing the wave profile in the di erent depths for this p ff steepseastate,thedi erentshapesinthelargestwavesareevident;inthelargerwaterdepththewavefield is relatively dispersed, while the wavefield at the shallowest probe is much less dispersed and the largest</p>
+<table>
+  <tbody>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  </tbody>
+</table>
+<table>
+  <tbody>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  </tbody>
+</table>
+<table>
+  <tbody>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  </tbody>
+</table>
+<table>
+  <tbody>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td>89
+50</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td>d
+d</td>
+    <td>=3.
+=1.</td>
+    <td>86, kd
+p
+82, kd</td>
+    <td>=2.
+=1.</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td>d</td>
+    <td>=0.</td>
+    <td>p
+54, kd
+p</td>
+    <td>=0.</td>
+    <td>68</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  </tbody>
+</table>
+<table>
+  <tbody>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  </tbody>
+</table>
+<table>
+  <tbody>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  </tbody>
+</table>
+<table>
+  <tbody>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  </tbody>
+</table>
+<h2>6 COASTALENGINEERING2024</h2>
+<p>(a) 0.4</p>
+<p>1050 1060 1070 1080 1090 1100 1110 t(s) (b) 0.4</p>
+<p>1620 1630 1640 1650 1660 1670 1680 t(s) (c) 0.4</p>
+<p>1290 1300 1310 1320 1330 1340 1350 t(s)</p>
+<h3>= = = =</h3>
+<p>Figure4: Waveprofilecloseto H of rec260723 ,a) d 3 . 86 m- k d 2 . 89 ,b) d 1 . 82 m- k d 1 . 50 ,c) max p p</p>
+<h3>= =</h3>
+<h3>d 0 . 54 m- k d 0 . 68</h3>
+<p>p</p>
+<p>(a) (b) 0.3</p>
+<p>-4 -3 -2 -1 0 -4 -3 -2 -1 0 10 10 10 10 10 10 10 10 10 10 Probability of exceedence Probability of exceedence (c) (d) 1.2</p>
+<p>-4 -3 -2 -1 0 -4 -3 -2 -1 0 10 10 10 10 10 10 10 10 10 10 Probability of exceedence Probability of exceedence</p>
+<p>Figure 5: a) Hk / 2 , b) H / d , c) H / H and d) η / H plotted against their probability of exceedence for p s c s</p>
+<h3>= =</h3>
+<h3>rec260723 : T 2 . 33 s, H k / 2 0 . 145</h3>
+<p>p so p</p>
+<table>
+  <tbody>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td>d=
+d=</td>
+    <td>3.8
+1.8</td>
+    <td>6, kd
+p
+2, kd
+p</td>
+    <td>=2
+=1</td>
+    <td>.8
+.5</td>
+    <td>9
+0</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td>d=</td>
+    <td>0.5</td>
+    <td>4, kd
+p</td>
+    <td>=0</td>
+    <td>.6</td>
+    <td>8</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  </tbody>
+</table>
+<table>
+  <tbody>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td>6</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td>d=</td>
+    <td>3.8</td>
+    <td>6</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td>R
+Fo</td>
+    <td>ayle
+rris</td>
+    <td>igh
+tall</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td>B
+Kl</td>
+    <td>occo
+opm</td>
+    <td>tti
+an</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td>M
+B</td>
+    <td>end
+attje</td>
+    <td>ez
+s</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  </tbody>
+</table>
+<table>
+  <tbody>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td>2</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td>d=</td>
+    <td>1.8</td>
+    <td>2</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td>R
+Fo</td>
+    <td>ayle
+rris</td>
+    <td>igh
+tall</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td>B
+Kl</td>
+    <td>occo
+opm</td>
+    <td>tti
+an</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td>M
+B</td>
+    <td>end
+attje</td>
+    <td>ez
+s</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  </tbody>
+</table>
+<table>
+  <tbody>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td>4</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td>d=</td>
+    <td>0.5</td>
+    <td>4</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td>R
+Fo</td>
+    <td>ayle
+rris</td>
+    <td>igh
+tall</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td>B
+Kl</td>
+    <td>occo
+opm</td>
+    <td>tti
+an</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td>M
+B</td>
+    <td>end
+attje</td>
+    <td>ez
+s</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  </tbody>
+</table>
+<p>COASTALENGINEERING2024 7</p>
+<p>waves resemble a wave soliton. The above findings are consistent with previous extended experimental workbyKatsardietal.(2013).</p>
+<p>Probabilityofexceedence InFig.5thewavesteepness Hk / 2,the H / d parameter,the H / H parameterandthe η / H parameter p s c s areplottedagainsttheirprobabilityofexceedence, Q ,forthewavesateachwaterdepthlevel. Apparently in Fig. 5a there is an increase in wave steepness with the reduction of water depth, particularly in the shallowestrecord. Betweenthedeepandintermediaterecordsthereisminimalincreaseinsteepnessthat couldbeattributedtotheshoalingprocess. Also,shallowwaterwaveslooktohavereachedsomethreshold duetowavebreaking. ThisisalsoapparentinFig.5b,whereinshallowwaterthe H / d parameterreaches 0 . 75. Indeeperwaters H / d issmallwhichreflectsawavefieldthatisnotdepthlimited. InFig.5c,thedeep andintermediatewaterdistributionsaresimilarwithaslightincreaseofthe H / H ratiofortheintermediate s depthreflectingthesmallincreaseinthewavefieldsteepness(Fig.5a). However,theshallowerdistribution ff ( − 2) ( − 2) ∗ ∗ hasadi erentshape,withthe H / H ratioincreasingfor Q &gt; 2 10 anddecreasingfor Q &lt; 2 10 s comparedtothedistributionsindeepwater. Thisisduetothecompetitiveinfluenceoftheincreaseofboth thewavefieldsteepnessandwavebreaking. Finally,Fig.5d( η / H )showsthegradualincreaseinthecrest- c s troughasymmetryaswemovefromdeeptoshallowwater,directlyrelatedtotheincreaseofnonlinearity orwavesteepness. Fig.6presentswaveheightdistributionplotsagainsttheirprobabilityofexceedence( Q , H )compared with well-known distributions presented earlier in this paper. As seen in Fig. 6, in deep water, all of the distributionsoverestimatethewaveheights,withBoccotti’sandKlopman-Glukhowskii’sshowingthebest behaviour. In intermediate water, all of the distributions overestimate the wave heights except for Klop- man’s. Inshallowerwater, theKlopman-GlukhowskiistillworkswelltogetherwiththeMendezdistribu- tion.InpreviouslaboratoryworkbyKatsardietal.(2013),thebestdistributioninintermediatewaterdepths</p>
+<p>(a) (b) 0.7 0.7</p>
+<p>-4 -3 -2 -1 0 -4 -3 -2 -1 0 10 10 10 10 10 10 10 10 10 10 Probability of exceedence Probability of exceedence</p>
+<p>(c) (d) 0.7 0.7</p>
+<p>-4 -3 -2 -1 0 -4 -3 -2 -1 0 10 10 10 10 10 10 10 10 10 10 Probability of exceedence Probability of exceedence</p>
+<p>Figure6: rec260723 : a)Waveheightsagainstprobabilityofexceedenceandwaveheightdistributionsfor = = = = = = b) d 3 . 86 m- k d 2 . 89 ,c) d 1 . 82 m- k d 1 . 50 ,d) d 0 . 54 m- k d 0 . 68 p p p</p>
+<table>
+  <thead><tr>
+    <th scope="col">(a) (b)
+0.6 1.5
+d=3.86, k d=2.89
+p
+d=1.82, k d=1.50
+p
+0.4 1 d=0.54, k d=0.68
+p
+2 = k H d = H
+0.2 0.5
+0 0
+5 4 3 2 1 0 5 4 3 2 1 0
+kd kd</th>
+  </tr></thead>
+  <tbody>
+  <tr>
+    <td>(c) (d)
+0.6 1.5
+d=3.86, k d=2.89
+p
+d=1.82, k d=1.50
+p
+0.4 1 d=0.54, k d=0.68
+2 p
+= d
+ko =
+H
+H
+0.2 0.5
+0 0
+5 4 3 2 1 0 5 4 3 2 1 0
+kod kod</td>
+  </tr>
+  </tbody>
+</table>
+<table>
+  <tbody>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  </tbody>
+</table>
+<table>
+  <thead><tr>
+    <th scope="col">d
+d</th>
+    <td></td>
+    <td></td>
+    <th scope="col">d=2.89
+d=1.50</th>
+    <td></td>
+    <td></td>
+  </tr></thead>
+  <tbody>
+  <tr>
+    <td></td>
+    <td>d
+d</td>
+    <td>=3.86, k
+p
+=1.82, k
+p</td>
+    <td>d=2.89
+d=1.50</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>d</td>
+    <td>d</td>
+    <td>=0.54, k
+p</td>
+    <td>d=0.68</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  </tbody>
+</table>
+<table>
+  <tbody>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  </tbody>
+</table>
+<table>
+  <thead><tr>
+    <th scope="col">d
+d</th>
+    <td></td>
+    <td></td>
+    <th scope="col">d=2.89
+d=1.50</th>
+    <td></td>
+    <td></td>
+  </tr></thead>
+  <tbody>
+  <tr>
+    <td></td>
+    <td>d
+d</td>
+    <td>=3.86, k
+p
+=1.82, k
+p</td>
+    <td>d=2.89
+d=1.50</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>d</td>
+    <td>d</td>
+    <td>=0.54, k
+p</td>
+    <td>d=0.68</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  </tbody>
+</table>
+<p>8 COASTALENGINEERING2024</p>
+<p>ff Figure7:Variationofwavesteepness( Hk / 2 )(a,c)and H / d pere ectivewaterdepth( kd )for rec260723 with Miche(a,b)andGoda(c,d)breakingcriteriasuperimposed;(c,d)arebasedondeepwaterwavenumbersto alignwithGoda’scriterion)</p>
+<p>= (similartoour k d 1 . 50)wasBattjes’sdistribution, whileinshallowerwatersalldistributionsfailedto p ff describewaveheightswithKlopmanandMendezshowingbetterbehaviour.However,themaindi erences ofthelaboratoryexperimentfromthisdatasetarethat(i)itinvolvesunidirectionalwavepropagationina = flumewithalltheadditionaldissipationlimitationsand(ii)itinvolvesamuchmilderbedslope m 1 / 100 = compared to the field experiment ( m 1 / 10). Therefore, this shift in the validity of the distribution is ff probably due to the e ect of the steeper bed slope and the related parameters such as the wave steepness ff (andthusthenonlinearity)andthee ectsofdirectionality. Itisalsosignificanttomentionthatthedistribu- tionsthatutilisetheroot-mean-squarewaveheight( H )areusedwiththemeasured H fromthedataset rms rms √ = 2 rather than estimations such as H H according to linear theory for a narrow-banded process or rms s 2 otherparametrisationsthatseemtooverestimatethemeasured H . rms</p>
+<p>WaveBreaking</p>
+<p>Fig. 7 describes the variation of the local wave steepness ( Hk / 2) and the wave height to water depth ff ∼ ratio ( H / d ) as a function of the local e ective water depth from all 1700 separated waves from each sensorof rec260723 . TheMiche(1944)breakingcriterionissuperimposedwithablacklineonFig.7a,b andtheGoda(2010)criteriononFig.7c,d. Fromtheplotitisderivedthatindeepwaterthewavefielddoes not include breaking waves, but in shallow water the wavefield is much closer to breaking limit. In fact, somereddotsthatrepresenttheshallowrecordareoverthelimitoftheMichecriterion. Ontheotherhand, ff Goda’slimit,whichincludesthee ectofbedslope,doesnotunderestimatethelargestwavesoccurringin shallowwater. Propagatingintoshallowerwaterthewavesmoveevenclosertothebreakinglimit,where each wave’s local parameters are compared to the established breaking limits. Through spectral analysis (Fig.3), thereisalsoclearevidenceofenergydissipationfromwavebreakingasspectralenergyreduces significantlyintheshallowermeasurements. Sometimes,asteepersea-stateindeepwatercancausemore energydissipationpriortothewavesreachingtheirmoredepth-limitedstateclosertothecoast.</p>
+<p>Ashallowercasewitharoguewave</p>
+<p>In rec140723 , whose local height maxima and surrounding wave profile are depicted in Fig. 8, the ff wavefield shows similar characteristics to rec260723 , with the e ective water depth of all records being</p>
+<table>
+  <tbody>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  </tbody>
+</table>
+<table>
+  <tbody>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  </tbody>
+</table>
+<table>
+  <tbody>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  </tbody>
+</table>
+<table>
+  <tbody>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td>d=3.</td>
+    <td>78, kd
+p</td>
+    <td>=2</td>
+    <td>.26</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td>d=1.
+d=0.</td>
+    <td>75, kd
+p
+44, kd
+p</td>
+    <td>=1
+=0</td>
+    <td>.09
+.49</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  </tbody>
+</table>
+<table>
+  <tbody>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  </tbody>
+</table>
+<table>
+  <tbody>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  </tbody>
+</table>
+<table>
+  <tbody>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  </tbody>
+</table>
+<h2>COASTALENGINEERING2024 9</h2>
+<p>(a)</p>
+<p>1410 1420 1430 1440 1450 1460 1470 t(s) (b)</p>
+<p>1850 1860 1870 1880 1890 1900 1910 t(s) (c)</p>
+<p>1130 1140 1150 1160 1170 1180 1190 t(s)</p>
+<h3>= = = =</h3>
+<p>Figure8: Waveprofilecloseto H of rec140723 ,a) d 3 . 78 m- k d 2 . 26 ,b) d 1 . 75 m- k d 1 . 09 ,c) max p p</p>
+<h3>= =</h3>
+<h3>d 0 . 44 m- k d 0 . 49</h3>
+<p>p (a) (b)</p>
+<p>-4 -3 -2 -1 0 -4 -3 -2 -1 0 10 10 10 10 10 10 10 10 10 10 Probability of exceedence Probability of exceedence (c) (d) 1.4</p>
+<p>-4 -3 -2 -1 0 -4 -3 -2 -1 0 10 10 10 10 10 10 10 10 10 10 Probability of exceedence Probability of exceedence Figure 9: a) Hk , b) H d , c) H H and d) H plotted against their probability of exceedence for</p>
+<h3>/ 2 / / η /</h3>
+<p>p s c s</p>
+<h3>rec140723</h3>
+<table>
+  <tbody>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  </tbody>
+</table>
+<table>
+  <tbody>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  </tbody>
+</table>
+<table>
+  <tbody>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  </tbody>
+</table>
+<p>10 COASTALENGINEERING2024</p>
+<p>= shifted shallower. Indeed, the shallowest record reaches the shallow limit k d 0 . 49 &lt; 0 . 50. This is p profoundinFig.8cwherethewaveprofile,showslimitedevidenceoffrequencydispersionbutratheralmost describes a sequence of solitary-type wave forms. This is consistent with the uni-directional laboratory = measurementsfromKatsardietal.(2013)discussedearlierinthispaper. Intheintermediatedepth( k d p ≥ 1 . 09)recorddepictedinFig.8bthereistheappearanceofaroguewaveasdefinedbythe H 2 H criterion, s = ≃ asthedowncrossing H 0 . 643m 2 H ,the H beingequalto0 . 322m. Italsosatisfiesthe η / H &gt; 1 . 25 max s s c s η / H ≃ . threshold(Dystheetal.,2008)asitscrestheighttosignificantwaveheightratioreaches 1 3. c s AsshowninFig.9athiswavefieldislesssteepthanthepreviousone(Fig.5a). Itisinterestingthatthe steepnessinshallowerwaterissignificantlyhigherthanthedeeperrecords,wherethesteepnesscurvesare almostidentical. Itisanindicationofawavefieldthatdoesnotincludealotofbreakingwavesindeeper water, so the energy has not dissipated as much as a steeper wavefield when propagating into shallower water. Thewaveheighttowaterdepthratioinshallowwater(Fig.9b)reaches H / d &gt; 0 . 78,whichislarger thantheclassicsolitarywaveMcCowan(1894)breakingcriterion. Thecontrastbetweenthesewaveforms andthoseobservedindeeperwater(Fig.8a)ismarked,notleastintermsoftheircrest-troughasymmetry. Indeed,itishardlysurprisingthatthedistributionofwaveheightsandtheirlimitingcharacteristicsshould ff di er significantly. In Fig. 9c the cross of the H / H curves indicate the limiting state of the dispersive s characteristics of the wavefield, while the increase of the η / H ratio as the field propagates to shallower c s waterisshowninFig.9d.</p>
+<p>Acasewithlargetroughsonthehighestwaves ff In rec270723 , whosewaveprofilecloseto H isshowninFig.10, thee ectivewaterdepthforall max probes is similar with the rec140723 case examined in Figs. 8, 9. Again, in shallower water (Fig. 11c) thewavefieldhasalmostlostitsdispersivecharacteristics,thoughindeeperwaterthelocalheightmaxima appearininstanceswithlargetroughsthatresemblelargeregularwavesthatdeviatefromtheusualshape of deep water large waves (Boccotti, 1983). As shown in Fig. 11a the shallower wavefield is as steep rec140723 as but the deeper records show a wavefield that is much steeper in deeper water which has H / d dissipatedduetobreakingwhenitreachesshallowwater. InFig11b,the ratioinshallowerwateralso H / d &gt; . H / H reaches 0 78,largerthantheMcCowancriterion. The curvesshowninFig.11cshowacross s</p>
+<p>(a) 0.4</p>
+<p>300 310 320 330 340 350 360 t(s)</p>
+<p>(b) 0.4</p>
+<p>2570 2580 2590 2600 2610 2620 2630 t(s)</p>
+<p>(c) 0.4</p>
+<p>3310 3320 3330 3340 3350 3360 3370 t(s)</p>
+<p>= = = = Figure10: Waveprofilecloseto H of rec270723 ,a) d 3 . 83 m- k d 1 . 98 ,b) d 1 . 79 m- k d 1 . 11 ,c) max p p = = d 0 . 50 m- k d 0 . 49 p</p>
+<table>
+  <tbody>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td>8</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td>d</td>
+    <td>=3.8</td>
+    <td>3, kd
+p</td>
+    <td>=1</td>
+    <td>.9</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td>d
+d</td>
+    <td>=1.7
+=0.5</td>
+    <td>9, kd
+p
+0, kd
+p</td>
+    <td>=1
+=0</td>
+    <td>.1
+.4</td>
+    <td>1
+9</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  </tbody>
+</table>
+<table>
+  <tbody>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  </tbody>
+</table>
+<table>
+  <tbody>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  </tbody>
+</table>
+<table>
+  <tbody>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  </tbody>
+</table>
+<p>COASTALENGINEERING2024 11</p>
+<p>(a) (b)</p>
+<p>-4 -3 -2 -1 0 -4 -3 -2 -1 0 10 10 10 10 10 10 10 10 10 10 Probability of exceedence Probability of exceedence</p>
+<p>(c) (d)</p>
+<p>-4 -3 -2 -1 0 -4 -3 -2 -1 0 10 10 10 10 10 10 10 10 10 10 Probability of exceedence Probability of exceedence</p>
+<p>Figure 11: a) Hk / 2 , b) H / d , c) H / H and d) η / H plotted against their probability of exceedence for p s c s rec270723</p>
+<p>atsteepangleofprobabilityofexceedencebetweentheshalloweranddeeperrecordsthatindicatesagain ff thedi erenceinthedispersivepropertiesaswellasthatthewaveshavereachedahardheightthresholddue tobreaking. ThethresholdisalsoevidentinFig.11dwhichshowsthe η / H curves. c s</p>
+<p>CONCLUDINGREMARKS ff This work aims to provide evidence of the e ects of the sea state and local wave parameters to the waveprofileandwavebreakingbyusingadatasetcollectedinthefieldthatcorrespondstorealconditions. Previous numerical simulations and experimental findings are confirmed and enriched, showing the clear change in wave profile while steep waves are propagating in shallower water while they approach their breakinglimit, withasoliton-likebehaviourbeingthecharacteristicofshallowerwatersteepwaves. The main reason for this transition is the change in the dispersive properties of the wavefield, which is also indicatedatthewaveheightdistributions. Bothwavesteepnessandwavebreakingdominatetheformation of the wave profile and the evolution of the wavefield albeit in a competitive manner. Finally, the bed slopeseemstoplayacrucialrolenotonlyatthepropagationandthustheincreaseinthewaveheight,but alsointhecalibrationandvalidationofthevariousmodels; bothrelatedtoprobabilityofexceedenceand breakinglimit. Morerecentandelaboratewaveandcrestheightdistributionmodels(e.g.Wuetal.,2016; Karmpadakisetal.,2022;KarmpadakisandSwan,2022)willbeevaluatedwiththisdatasetinthefuture.</p>
+<p>References // / Noel–NaturalOceanEngineeringLaboratory. https: noel.unirc.it .</p>
+<p>J.A.BattjesandH.W.Groenendijk.Waveheightdistributionsonshallowforeshores. CoastalEngineering , / 40(3):161–182,June2000. ISSN0378-3839. doi: 10.1016 S0378-3839(00)00007-7.</p>
+<p>12 COASTALENGINEERING2024</p>
+<p>P. Boccotti. Some new results on statistical properties of wind waves. Applied Ocean Research , 5(3): / 134–140,July1983. ISSN0141-1187. doi: 10.1016 0141-1187(83)90067-6. P.Boccotti. Onmechanicsofirregulargravitywaves. AttiAccademiaNazionaledeiLincei,MemorieVIII, , 19:111–170,1989. P. Boccotti. A general theory of three-dimensional wave groups Part I: The formal derivation. Ocean / Engineering ,24(3):265–280,Mar.1997. ISSN00298018. doi: 10.1016 S0029-8018(96)00013-3. P. Boccotti. Caisson breakwaters embodying an OWC with a small opening—Part I: Theory. Ocean / Engineering ,34(5-6):806–819,Apr.2007. ISSN00298018. doi: 10.1016 j.oceaneng.2006.04.006. P. Boccotti. Wave Mechanics and Wave Loads on Marine Structures . Marine Engineering. Butterworth- Heinemann, an imprint of Elsevier, Amsterdam Boston Heidelberg, 2014. ISBN 978-0-12-810258-9 978-0-12-800343-5. P. Boccotti, G. Barbaro, V. Fiamma, L. Mannino, and A. Rotta. An experiment at sea on the reflection / of the wind waves. Ocean Engineering , 20(5):493–507, Sept. 1993a. ISSN 00298018. doi: 10.1016 0029-8018(93)90017-C. P.Boccotti,G.Barbaro,andL.Mannino. Afieldexperimentonthemechanicsofirregulargravitywaves. / Journal of Fluid Mechanics , 252:173–186, July 1993b. ISSN 0022-1120, 1469-7645. doi: 10.1017 S0022112093003714. P.Boccotti,P.Filianoti,V.Fiamma,andF.Arena. CaissonbreakwatersembodyinganOWCwithasmall opening—Part II: A small-scale field experiment. Ocean Engineering , 34(5-6):820–841, Apr. 2007. / ISSN00298018. doi: 10.1016 j.oceaneng.2006.04.016. P. Boccotti, F. Arena, V. Fiamma, A. Romolo, and G. Barbaro. Estimation of mean spectral directions / in random seas. Ocean Engineering , 38(2-3):509–518, Feb. 2011. ISSN 00298018. doi: 10.1016 j. oceaneng.2010.11.018. P. Boccotti, F. Arena, V. Fiamma, A. Romolo, and G. Barbaro. Small-Scale Field Experiment on Wave Forces on Upright Breakwaters. Journal of Waterway, Port, Coastal, and Ocean Engineering , 138(2): / 97–114,Mar.2012. ISSN0733-950X,1943-5460. doi: 10.1061 (ASCE)WW.1943-5460.0000111. AnnualReviewofFluidMechanics K.Dysthe,H.E.Krogstad,andP.Müller. Oceanicroguewaves. ,40: // / / 287–310,2008. ISSN1545-4479. doi: https: doi.org 10.1146 annurev.fluid.40.111406.102203. F. Fedele and F. Arena. Long-Term Statistics and Extreme Waves of Sea Storms. Journal of Physical / Oceanography ,40(5):1106–1117,May2010.ISSN1520-0485,0022-3670.doi:10.1175 2009JPO4335. 1. G.Z.Forristall.Onthestatisticaldistributionofwaveheightsinastorm. JournalofGeophysicalResearch: / Oceans ,83(C5):2353–2358,1978. ISSN2156-2202. doi: 10.1029 JC083iC05p02353. R.GibsonandC.Swan. Theevolutionoflargeoceanwaves: Theroleoflocalandrapidspectralchanges. ProceedingsoftheRoyalSocietyA:Mathematical,PhysicalandEngineeringSciences ,463(2077):21– / 48,Jan.2007. ISSN1364-5021,1471-2946. doi: 10.1098 rspa.2006.1729. Y.Goda. Reanalysisofregularandrandombreakingwavestatistics. CoastalEngineeringJournal ,52(01): / 71–106,Mar.2010. ISSN0578-5634. doi: 10.1142 S0578563410002129. Journal I.KarmpadakisandC.Swan. OntheAverageShapeoftheLargestWavesinFiniteWaterDepths. / of Physical Oceanography , 50(4):1023–1043, Apr. 2020. ISSN 0022-3670, 1520-0485. doi: 10.1175 JPO-D-19-0165.1. I.KarmpadakisandC.Swan. Anewcrestheightdistributionfornonlinearandbreakingwavesinvarying / waterdepths. OceanEngineering ,266:112972,Dec.2022. ISSN00298018. doi: 10.1016 j.oceaneng. 2022.112972.</p>
+<p>COASTALENGINEERING2024 13</p>
+<p>I.Karmpadakis,C.Swan,andM.Christou.Laboratoryinvestigationofcrestheightstatisticsinintermediate water depths. Proceedings of the Royal Society A: Mathematical, Physical and Engineering Sciences , / 475(2229):20190183,Sept.2019. ISSN1364-5021,1471-2946. doi: 10.1098 rspa.2019.0183.</p>
+<p>I.Karmpadakis, C.Swan, andM.Christou. Anewwaveheightdistributionforintermediateandshallow / waterdepths. CoastalEngineering ,175:104130,Aug.2022.ISSN03783839.doi:10.1016 j.coastaleng. 2022.104130.</p>
+<p>V.KatsardiandC.Swan. AnExperimentalStudyofShallowWaterWaveStatisticsonMildBedSlopes. In Volume2: Structures,SafetyandReliability ,pages711–719,Rotterdam,TheNetherlands,Jan.2011. / ASMEDC. ISBN978-0-7918-4434-2. doi: 10.1115 OMAE2011-49957.</p>
+<p>V.Katsardi,L.DeLutio,andC.Swan. Anexperimentalstudyoflargewavesinintermediateandshallow waterdepths.PartI:Waveheightandcrestheightstatistics. CoastalEngineering ,73:43–57,Mar.2013. / ISSN03783839. doi: 10.1016 j.coastaleng.2012.09.007.</p>
+<p>G. Klopman. Extreme wave heights in shallow water, Report H2486. Technical report, WLrDelft hy- draulics,TheNetherlands.,1996.</p>
+<p>M. Latheef and C. Swan. A laboratory study of wave crest statistics and the role of directional spread- ing. ProceedingsoftheRoyalSocietyA:Mathematical,PhysicalandEngineeringSciences ,469(2152): / 20120696,Apr.2013. ISSN1364-5021,1471-2946. doi: 10.1098 rspa.2012.0696.</p>
+<p>TheAnnalsofMathematical G.Lindgren. SomePropertiesofaNormalProcessNearaLocalMaximum. / / Statistics ,41(6):1870–1883,Dec.1970. ISSN0003-4851,2168-8990. doi: 10.1214 aoms 1177696688.</p>
+<p>M.Longuet-Higgins.Onthestatisticaldistributionoftheheightsofseawaves. JournalofMarineResearch , 11(3),Jan.1953.</p>
+<p>J. McCowan. XXXIX. On the highest wave of permanent type. The London, Edinburgh, and Dublin PhilosophicalMagazineandJournalofScience ,38(233):351–358,Oct.1894. ISSN1941-5982,1941- / 5990. doi: 10.1080 14786449408620643.</p>
+<p>F. J. Mendez, I. J. Losada, and R. Medina. Transformation model of wave height distribution on planar / beaches. Coastal Engineering , 50(3):97–115, Jan. 2004. ISSN 0378-3839. doi: 10.1016 j.coastaleng. 2003.09.005.</p>
+<p>M.Miche. Mouvementsondulatoiresdelamerenprofondeurconstanteoudécroissante. AnnalesdePonts etChaussées ,114(1):131–164,270–292,369–406,1944.</p>
+<p>A.RomoloandF.Arena. Three-dimensionalnon-linearstandingwavegroups: Formalderivationandex- perimentalverification. InternationalJournalofNon-LinearMechanics ,57:220–239,Dec.2013. ISSN / 0020-7462. doi: 10.1016 j.ijnonlinmec.2013.08.005.</p>
+<p>M.Schubert,Y.Wu,J.Tychsen,M.Dixen,M.H.Faber,J.D.Sørensen,andP.Jonathan.Onthedistribution ofmaximumcrestandwaveheightatintermediatewaterdepths. OceanEngineering ,217:107485,Dec. / 2020. ISSN0029-8018. doi: 10.1016 j.oceaneng.2020.107485.</p>
+<p>M.A.TayfunandM.A.Alkhalidi. Distributionofsea-surfaceelevationsinintermediateandshallowwater / depths. CoastalEngineering ,157:103651,Apr.2020. ISSN0378-3839. doi:10.1016 j.coastaleng.2020. 103651.</p>
+<p>P. S. Tromans, A. R. Anaturk, and P. Hagemeijer. A New Model For The Kinematics Of Large Ocean ff Waves-ApplicationAsaDesignWave. In TheFirstInternationalO shoreandPolarEngineeringConf., Edinburgh ,InternationalOceanandPolarEngineeringConference,Aug.1991.</p>
+<p>J. J. Voermans, V. Laface, A. V. Babanin, A. Romolo, and F. Arena. Standing wave field observations / at a vertical wall. Coastal Engineering , 160:103749, Sept. 2020. ISSN 0378-3839. doi: 10.1016 j. coastaleng.2020.103749.</p>
+<p>14 COASTALENGINEERING2024</p>
+<p>C. N. Whittaker, A. C. Raby, C. J. Fitzgerald, and P. H. Taylor. The average shape of large waves in</p>
+<p>/</p>
+<p>the coastal zone. Coastal Engineering , 114:253–264, Aug. 2016. ISSN 0378-3839. doi: 10.1016 j.</p>
+<p>coastaleng.2016.04.009.</p>
+<p>Y.Wu,D.Randell,M.Christou,K.Ewans,andP.Jonathan. Onthedistributionofwaveheightinshallow</p>
+<p>/</p>
+<p>water. Coastal Engineering , 111:39–49, May 2016. ISSN 03783839. doi: 10.1016 j.coastaleng.2016.</p>
+<p>01.015.</p>
+</article>
+</main>
+</body>
+</html>
